@@ -16,6 +16,12 @@ export default function Header() {
                                 src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                         </div>
                     </div>
+                    <div className='flex flew-row gap-1'>
+                        <ul>
+                            <li>Login</li>
+                            <li>➡️</li>
+                        </ul>
+                    </div>
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
@@ -28,6 +34,7 @@ export default function Header() {
                         <li><a>Settings</a></li>
                         <li><a>Logout</a></li>
                     </ul>
+
                 </div>
             </div>
         </div>
