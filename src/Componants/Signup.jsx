@@ -35,7 +35,6 @@ export default function Signup() {
 
 
                     <div className='text-center mt-2'>
-
                         <p className='mt-4'>Having an account ?</p>
                         <NavLink to="/login" className="text-blue-500 mt-1.5 hover:text-blue-800">Log in</NavLink>
                     </div>
