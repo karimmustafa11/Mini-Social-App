@@ -39,6 +39,8 @@ export default function Login() {
             });
 
             if (res.data.length > 0) {
+                const loggedInUser = res.data[0];
+                localStorage.setItem("user", JSON.stringify(loggedInUser));
                 setToastMessage("✅ Login successful!");
                 setTimeout(() => {
                     setShowToast(false);

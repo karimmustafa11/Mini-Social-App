@@ -1,30 +1,44 @@
-import React from 'react'
+import React from 'react';
+import { NavLink } from 'react-router';
+import postifyLogo from '../assets/Postify.png';
 
-export default function Header() {
+
+export default function Header({ }) {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+
     return (
-        <div className="navbar bg-base-100 shadow-sm">
+        <div className="navbar bg-base-100 shadow-sm px-4">
             <div className="flex-1">
-                <a className="btn btn-ghost text-xl">daisyUI</a>
+                <NavLink className="btn btn-ghost text-2xl font-bold text-primary">
+                    <img src={postifyLogo} alt="Postify Logo" width={100} height={100} />                </NavLink>
             </div>
-            <div className="flex gap-2">
-                <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
+
+            <div className="flex items-center gap-4">
+                <input
+                    type="text"
+                    placeholder="Search"
+                    className="input input-bordered w-24 md:w-auto"
+                />
+
+                <button className="btn btn-outline btn-neutral">Login</button>
+                <button className="btn btn-neutral">Sign Up</button>
+
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
                             <img
-                                alt="Tailwind CSS Navbar component"
-                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                alt="User Avatar"
+                                src={user.image || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
+                            />
                         </div>
                     </div>
-                    <div className='flex flew-row gap-1'>
-                        <ul>
-                            <li>Login</li>
-                            <li>➡️</li>
-                        </ul>
-                    </div>
+
                     <ul
                         tabIndex={0}
-                        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                        className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                    >
                         <li>
                             <a className="justify-between">
                                 Profile
@@ -34,9 +48,8 @@ export default function Header() {
                         <li><a>Settings</a></li>
                         <li><a>Logout</a></li>
                     </ul>
-
                 </div>
             </div>
         </div>
-    )
+    );
 }
