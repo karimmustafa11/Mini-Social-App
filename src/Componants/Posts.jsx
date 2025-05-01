@@ -58,7 +58,7 @@ export default function Posts() {
                                 <img
                                     src={post.profilePicture || "https://i.pravatar.cc/40?img=32"}
                                     alt="Profile"
-                                    className="w-10 h-10 rounded-full"
+                                    className="w-10 h-10 bg-cover rounded-full "
                                 />
                                 <div>
                                     <p className="font-semibold text-gray-800">{post.authorName || "Unknown"}</p>
@@ -77,7 +77,7 @@ export default function Posts() {
                                         <img
                                             src={post.image}
                                             alt={post.title}
-                                            className="w-full h-64 object-cover rounded-md hover:scale-105 transition-transform duration-300"
+                                            className="w-full  object-cover rounded-md hover:scale-105 transition-transform duration-300"
                                         />
                                     </div>
                                 )
