@@ -1,11 +1,20 @@
 import React from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import postifyLogo from '../assets/Postify.png';
 
 
 export default function Header({ }) {
+    const navigate = useNavigate()
 
     const user = JSON.parse(localStorage.getItem("user"));
+
+    const NavigateSignUp = () => {
+        navigate("/signup")
+    }
+
+    const NavigateLogin = () => {
+        navigate("/login")
+    }
 
 
     return (
@@ -22,8 +31,8 @@ export default function Header({ }) {
                     className="input input-bordered w-24 md:w-auto"
                 />
 
-                <button className="btn btn-outline btn-neutral">Login</button>
-                <button className="btn btn-neutral">Sign Up</button>
+                <button className="btn btn-outline btn-neutral" onClick={NavigateLogin()}>Login</button>
+                <button className="btn btn-neutral" onClick={NavigateSignUp()}>Sign Up</button>
 
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
