@@ -1,28 +1,33 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useCallback } from 'react';
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(() =>
-        JSON.parse(localStorage.getItem('user'))
-    );
+    const [user, setUser] = useState(() => {
+        try {
+            const savedUser = localStorage.getItem('user');
+            return savedUser ? JSON.parse(savedUser) : null;
+        } catch (error) {
+            console.error('Failed to parse user data', error);
+            return null;
+        }
+    });
 
-    const login = (userData) => {
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-          
-    };
+    const login = useCallback((userData) => {
+        try {
+            const { password, ...safeUserData } = userData;
+            setUser(safeUserData);
+            localStorage.setItem('user', JSON.stringify(safeUserData));
+            return true;
+        } catch (error) {
+            console.error('Login failed', error);
+            return false;
+        }
+    }, []);
 
-    const logout = () => {
+    const logout = useCallback(() => {
         setUser(null);
         localStorage.removeItem('user');
-    };
-
-    useEffect(() => {
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
-            setUser(JSON.parse(savedUser));
-        }
     }, []);
 
     return (

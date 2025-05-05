@@ -47,21 +47,24 @@ export default function Signup() {
         };
     }, [isLoading]);
 
+    const showToastMessage = (message, duration = 2000) => {
+        setToastMessage(message);
+        setShowToast(true);
+        const timer = setTimeout(() => setShowToast(false), duration);
+        return () => clearTimeout(timer);
+    };
+
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
         if (!file.type.match('image.*')) {
-            setToastMessage('❌ Please upload an image file');
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 2000);
+            showToastMessage('❌ Please upload an image file');
             return;
         }
 
         if (file.size > 2 * 1024 * 1024) {
-            setToastMessage('❌ Image size should be less than 2MB');
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 2000);
+            showToastMessage('❌ Image size should be less than 2MB');
             return;
         }
 
@@ -72,9 +75,7 @@ export default function Signup() {
 
     const onSubmit = async (data) => {
         if (!imageBase64) {
-            setToastMessage('❌ Please upload a profile picture');
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 2000);
+            showToastMessage('❌ Please upload a profile picture');
             return;
         }
 
@@ -82,55 +83,64 @@ export default function Signup() {
         setShowToast(false);
 
         try {
-            const checkEmail = await axios.get('http://localhost:5000/users', {
-                params: { email: data.email },
-            });
+            // التحقق من البريد الإلكتروني ورقم الهاتف
+            const usersRes = await axios.get('http://localhost:5000/users');
+            const emailExists = usersRes.data.some(
+                user => user.email.toLowerCase() === data.email.toLowerCase()
+            );
 
-            console.log('Check email response:', checkEmail);
+            const phoneExists = usersRes.data.some(
+                user => user.phone === data.phone
+            );
 
-            if (checkEmail.data.length > 0) {
-                setToastMessage('❌ Email already exists');
-                setShowToast(true);
-                setTimeout(() => {
-                    setShowToast(false);
-                    setIsLoading(false);
-                }, 2000);
+            if (emailExists) {
+                showToastMessage('❌ Email already exists');
+                setIsLoading(false);
                 return;
             }
 
-            const userWithImage = {
-                ...data,
+            if (phoneExists) {
+                showToastMessage('❌ Phone number already registered');
+                setIsLoading(false);
+                return;
+            }
+
+            // إنشاء مستخدم جديد
+            const newUser = {
+                fullname: data.fullname,
+                phone: data.phone,
+                email: data.email,
                 image: imageBase64,
+                createdAt: new Date().toISOString()
             };
 
-            const res = await axios.post('http://localhost:5000/users', userWithImage);
+            const res = await axios.post('http://localhost:5000/users', {
+                ...newUser,
+                password: data.password
+            });
 
-            console.log('Signup response:', res);
             if (res.status === 201) {
-                login(res.data);
-                setToastMessage('✅ Registration successful!');
-                setShowToast(true);
-                setTimeout(() => {
-                    setShowToast(false);
-                    setIsLoading(false);
-                    navigate('/');
-                }, 2000);
+                login(newUser);
+                showToastMessage('✅ Registration successful! Redirecting...');
+                setTimeout(() => navigate('/'), 2000);
             } else {
-                setToastMessage('❌ Failed to register. Please try again.');
-                setShowToast(true);
-                setTimeout(() => {
-                    setShowToast(false);
-                    setIsLoading(false);
-                }, 2000);
+                throw new Error('Failed to create user');
             }
         } catch (error) {
-            console.error('Signup error:', error.response || error);
-            setToastMessage(`❌ Error: ${error.response?.data?.message || 'Failed to register'}`);
-            setShowToast(true);
-            setTimeout(() => {
-                setShowToast(false);
-                setIsLoading(false);
-            }, 2000);
+            console.error('Signup error:', error);
+            let errorMessage = '❌ Registration failed. Please try again.';
+
+            if (error.response) {
+                if (error.response.status === 409) {
+                    errorMessage = '❌ User already exists';
+                } else if (error.response.status === 500) {
+                    errorMessage = '❌ Server error. Please try again later.';
+                }
+            }
+
+            showToastMessage(errorMessage);
+        } finally {
+            setIsLoading(false);
         }
     };
 

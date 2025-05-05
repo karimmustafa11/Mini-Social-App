@@ -11,21 +11,24 @@ export default function Posts() {
     const { user: currentUser } = useContext(UserContext);
     const navigate = useNavigate();
 
-    const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
+
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPosts = async () => {
+            setLoading(true);
             try {
                 const [postsRes, usersRes] = await Promise.all([
-                    axios.get("http://localhost:5000/posts"),
+                    axios.get(`http://localhost:5000/posts?_page=${page}&_limit=2`),
                     axios.get("http://localhost:5000/users"),
                 ]);
 
-                const enhancedPosts = postsRes.data.map(post => {
+                const newPosts = postsRes.data.map(post => {
                     const author = usersRes.data.find(user => String(user.id) === String(post.userId));
                     return {
                         ...post,
@@ -34,16 +37,36 @@ export default function Posts() {
                     };
                 });
 
-                setPosts(enhancedPosts);
-                setUsers(usersRes.data);
+                setPosts(prev => [...prev, ...newPosts]);
+                if (newPosts.length < 5) setHasMore(false);
             } catch (err) {
                 setError(err.message);
+                setHasMore(false);
             } finally {
                 setLoading(false);
             }
         };
-        fetchData();
-    }, []);
+
+        fetchPosts();
+    }, [page]);
+
+
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (
+                window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+                hasMore && !loading
+            ) {
+                setPage(prev => prev + 1);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [hasMore, loading]);
+
+
 
     const handleEdit = (id) => {
         navigate(`/edit-post/${id}`);
@@ -64,15 +87,7 @@ export default function Posts() {
         return currentUser && String(post.userId) === String(currentUser.id);
     };
 
-    if (loading) {
-        return (
-            <div className="w-screen h-screen flex justify-center items-center bg-gradient-to-br from-purple-500 to-pink-500 text-white">
-                <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-white border-r-transparent" role="status">
-                    <span className="sr-only">Loading...</span>
-                </div>
-            </div>
-        );
-    }
+
 
     if (error) {
         return <div className="text-center text-red-600 mt-10 text-lg font-semibold">Error: {error}</div>;
@@ -140,13 +155,24 @@ export default function Posts() {
                     </article>
                 ))}
             </section>
+            {loading && (
+                <div className="text-center my-6">
+                    <span className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-r-transparent"></span>
+                </div>
+            )}
+         
+            {posts.length === 0 && !loading && (
+                <div className="text-center text-gray-500 my-6">
+                    No posts available.
+                </div>
+            )}
 
             <div className="fixed bottom-6 right-6 w-[50px] h-[50px] rounded-full bg-black flex items-center justify-center shadow-lg transition-transform transform hover:scale-110">
                 <NavLink
                     to="/add-post"
                     className=" text-white text-2xl"
                 >
-                +    
+                    +
                 </NavLink>
             </div>
         </>

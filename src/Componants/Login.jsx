@@ -10,11 +10,8 @@ import axios from 'axios';
 import { UserContext } from '../Context/UserContext';
 
 const schema = yup.object({
-    email: yup.string().email('Invalid email').required('Email is required'),
-    password: yup
-        .string()
-        .min(6, 'Password must be at least 6 characters')
-        .required('Password is required'),
+    email: yup.string().trim().lowercase().email('Invalid email').required('Email is required'),
+    password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
 });
 
 export default function Login() {
@@ -40,29 +37,32 @@ export default function Login() {
 
         try {
             const res = await axios.get('http://localhost:5000/users');
-
             const users = res.data;
 
             const foundUser = users.find(
-                (user) => user.email === data.email && user.password === data.password
+                (user) =>
+                    user.email.trim().toLowerCase() === data.email.trim().toLowerCase() &&
+                    user.password === data.password
             );
 
             if (foundUser) {
-                login(foundUser);
                 setToastMessage('✅ Login successful!');
                 setShowToast(true);
+                setIsLoading(true);
+
                 setTimeout(() => {
+                    login(foundUser);
                     setShowToast(false);
                     setIsLoading(false);
-                    navigate("/")
-                }, 2000);
+                    navigate('/');
+                }, 1500);
             } else {
                 setToastMessage('❌ Invalid email or password');
                 setShowToast(true);
                 setTimeout(() => {
                     setShowToast(false);
                     setIsLoading(false);
-                }, 2000);
+                }, 1500);
             }
         } catch (error) {
             console.error('Login error:', error);
@@ -71,15 +71,18 @@ export default function Login() {
             setTimeout(() => {
                 setShowToast(false);
                 setIsLoading(false);
-            }, 2000);
+            }, 1500);
         }
     };
 
     return (
         <div className="w-screen h-screen flex items-center justify-center relative bg-base-100">
             {showToast && (
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                        bg-white text-black px-6 py-4 rounded-xl shadow-xl text-center z-50 text-lg font-semibold w-80">
+                <div
+                    role="alert"
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                        bg-white text-black px-6 py-4 rounded-xl shadow-xl text-center z-50 text-lg font-semibold w-80"
+                >
                     {toastMessage}
                     <div className="w-full h-1 bg-gray-300 mt-3 overflow-hidden rounded">
                         <div className={`h-full ${toastMessage.includes('✅') ? 'bg-green-500' : 'bg-red-500'} animate-toast-progress`}></div>
@@ -87,9 +90,7 @@ export default function Login() {
                 </div>
             )}
 
-            <div
-                className={`relative z-20 transition-all duration-300 ${isLoading ? 'blur-sm pointer-events-none select-none' : ''}`}
-            >
+            <div className={`relative z-20 transition-all duration-300 ${isLoading ? 'blur-sm pointer-events-none select-none' : ''}`}>
                 <div className="border-[1px] border-accent p-2.5 px-4">
                     <div className="flex flex-col justify-center items-center m-[-15px]">
                         <img src={postifyLogo} alt="Postify Logo" width={100} height={100} />
@@ -134,6 +135,7 @@ export default function Login() {
                                 className={`btn btn-neutral mt-4 shadow hover:bg-gray-800 hover:scale-105 transition-all duration-300 ease-in-out ${isLoading ? 'loading' : ''}`}
                                 style={{ borderRadius: 11 }}
                                 disabled={isLoading}
+                                aria-disabled={isLoading}
                             >
                                 {isLoading ? 'Logging in...' : 'Login'}
                             </button>
@@ -145,15 +147,15 @@ export default function Login() {
                             </div>
 
                             <div className="flex justify-center items-center mb-3">
-                                <img src={facebookLogo} alt="" width={30} height={30} />
-                                <p className="ms-1 text-blue-400 hover:text-blue-800 font-semibold">
+                                <img src={facebookLogo} alt="Facebook logo" width={30} height={30} />
+                                <p className="ms-1 text-blue-400 hover:text-blue-800 font-semibold cursor-not-allowed" title="Feature not available">
                                     Log in With Facebook
                                 </p>
                             </div>
 
                             <div className="flex justify-center items-center ms-[-12px]">
-                                <img src={googleLogo} alt="" width={30} height={30} />
-                                <p className="text-gray-500 hover:text-blue-800 font-semibold ms-[5px]">
+                                <img src={googleLogo} alt="Google logo" width={30} height={30} />
+                                <p className="text-gray-500 hover:text-blue-800 font-semibold ms-[5px] cursor-not-allowed" title="Feature not available">
                                     Log in With Google
                                 </p>
                             </div>
