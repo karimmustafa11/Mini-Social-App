@@ -1,12 +1,71 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🟦 Posta - Mini Social Media App
 
-Currently, two official plugins are available:
+Posta is a simple Facebook-like front-end project built with React + Vite. It supports login, image uploads, and basic post CRUD functionality.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎥 Demo Video
 
-## Expanding the ESLint configuration
+🔗 [Watch the demo](https://drive.google.com/file/d/1DSYrdVDRqkg0hAHLoN-MgKqKk44MqDT8/view?usp=sharing)
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Features
+
+- ✅ **Login System**
+  - Sign up and login using JSON Server as a mock backend
+  - Form validation with `yup` and `react-hook-form`
+  - Toggle show/hide password
+  - Upload profile image on signup
+
+- 📝 **Post Management**
+  - Create, edit, and delete posts
+  - Only the owner of the post can edit or delete it
+  - Posts include image, content, and timestamp
+
+- 💡 **User Interface**
+  - Clean and modern UI using Tailwind CSS
+  - Toast messages for success and error feedback
+  - Blur background effect while loading for polished UX
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React + Vite  
+- **Routing**: React Router  
+- **Forms**: `react-hook-form` + `yup`  
+- **State Management**: Context API  
+- **Mock Backend**: JSON Server  
+- **Styling**: Tailwind CSS  
+- **Image Uploads**: Base64 encoding via FileReader API  
+
+## ⚙️ How to Run
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/karimmustafa11/Mini-Social-App.git
+   cd Mini-Social-App
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start JSON Server in a separate terminal:
+   ```bash
+   npx json-server --watch db.json --port 5000
+   ```
+
+4. Start the Vite dev server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open your browser at: `http://localhost:5173`
+
+## 📦 Requirements
+
+- Node.js 16 or higher  
+- npm  
+- JSON Server  
+
+## ✍️ Developer
+
+Made with ❤️ by [Karim Mustafa](https://github.com/karimmustafa11)
