@@ -1,4 +1,8 @@
 import React from 'react'
+import balde from "../assets/1.jpg"
+import szczesny from "../assets/0.jpeg"
+import deJong from "../assets/2.jpg"
+import palystation from "../assets/palystation.webp"
 
 export default function SidebarLeft() {
     const SidebarCard = ({ children }) => (
@@ -10,11 +14,17 @@ export default function SidebarLeft() {
         <aside className="w-1/5 hidden md:block px-4 space-y-6">
             <SidebarCard>
                 <h4 className="text-lg font-semibold text-gray-700">Friend Suggestions</h4>
-                {["Marwa", "Ebtsam", "Salma"].map((name, i) => (
+                {["szczesny", "Balde", "De Jong"].map((name, i) => (
                     <div key={i} className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
                             <img
-                                src={`https://i.pravatar.cc/40?img=${i + 45}`}
+                                src={
+                                    name === "szczesny"
+                                        ? szczesny
+                                        : name === "Balde"
+                                            ? balde
+                                            : deJong
+                                }
                                 alt={name}
                                 className="w-8 h-8 rounded-full"
                             />
@@ -42,9 +52,9 @@ export default function SidebarLeft() {
             </SidebarCard>
 
             <SidebarCard>
-                <p className="text-gray-700 mb-2 text-center">Sponsored Ad</p>
+                <p className="text-lg font-semibold text-gray-700">Sponsored Ad</p>
                 <img
-                    src="https://via.placeholder.com/200x100.png?text=Ad+Banner"
+                    src={palystation}
                     alt="Ad"
                     className="rounded mx-auto"
                 />

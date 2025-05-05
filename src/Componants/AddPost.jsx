@@ -13,9 +13,10 @@ export default function AddPost() {
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
+        if (!file) return;
         const reader = new FileReader();
         reader.onloadend = () => setImageBase64(reader.result);
-        if (file) reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
     };
 
     const handleSubmit = async (e) => {
@@ -26,19 +27,22 @@ export default function AddPost() {
             title,
             content,
             image: imageBase64,
-            createdAt: new Date().toISOString(),
-            authorId: user.id,
-            authorName: user.fullname,
-            profilePicture: user.image || ""
+            userId: user.id,
+            createdAt: new Date().toISOString()
         };
 
-        await axios.post("http://localhost:5000/posts", newPost);
-        navigate("/");
+        try {
+            await axios.post("http://localhost:5000/posts", newPost);
+            navigate("/");
+        } catch (err) {
+            console.error("Error creating post:", err);
+            alert("Something went wrong while creating the post.");
+        }
     };
 
     return (
-        <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-semibold mb-4">Create a New Post</h2>
+        <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md mt-7 mb-7">
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Create a New Post</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -46,13 +50,15 @@ export default function AddPost() {
                     className="input input-bordered w-full mb-4"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    required
                 />
                 <textarea
                     placeholder="What's on your mind?"
                     className="textarea textarea-bordered w-full mb-4"
-                    rows={4}
+                    rows={5}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
+                    required
                 />
                 <input
                     type="file"
@@ -60,7 +66,12 @@ export default function AddPost() {
                     className="file-input w-full mb-4"
                     onChange={handleImageUpload}
                 />
-                <button type="submit" className="btn btn-primary w-full">Post</button>
+                <button
+                    type="submit"
+                    className="btn w-full bg-black text-white hover:bg-gray-800"
+                >
+                    Post
+                </button>
             </form>
         </div>
     );
