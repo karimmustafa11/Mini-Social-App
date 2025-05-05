@@ -1,8 +1,8 @@
 import React from 'react'
-import balde from "../assets/1.jpg"
-import szczesny from "../assets/0.jpeg"
-import deJong from "../assets/2.jpg"
-import palystation from "../assets/palystation.webp"
+import balde from "../assets/leftbar/1.jpg"
+import szczesny from "../assets/leftbar/0.jpeg"
+import deJong from "../assets/leftbar/2.jpg"
+import palystation from "../assets/leftbar/palystation.webp"
 
 export default function SidebarLeft() {
     const SidebarCard = ({ children }) => (

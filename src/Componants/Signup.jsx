@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
-import postifyLogo from '../assets/Postify.png';
+import postifyLogo from '../assets/Logo/Postify.png';
 import { UserContext } from '../Context/UserContext';
 
 const schema = yup.object({
@@ -86,7 +86,7 @@ export default function Signup() {
                 params: { email: data.email },
             });
 
-            console.log('Check email response:', checkEmail); // نشوف إيه رجع من الـ API
+            console.log('Check email response:', checkEmail);
 
             if (checkEmail.data.length > 0) {
                 setToastMessage('❌ Email already exists');
@@ -105,8 +105,7 @@ export default function Signup() {
 
             const res = await axios.post('http://localhost:5000/users', userWithImage);
 
-            console.log('Signup response:', res); // نشوف إيه رجع من الـ API
-
+            console.log('Signup response:', res);
             if (res.status === 201) {
                 login(res.data);
                 setToastMessage('✅ Registration successful!');

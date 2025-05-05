@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import postifyLogo from '../assets/Postify.png';
-import facebookLogo from '../assets/facebook.png';
-import googleLogo from '../assets/google.png';
+import postifyLogo from '../assets/Logo/Postify.png';
+import facebookLogo from '../assets/Social/facebook.png';
+import googleLogo from '../assets/Social/google.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';

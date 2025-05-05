@@ -2,8 +2,6 @@ import React from 'react'
 import SidebarRight from "./SidebarRight";
 import SidebarLeft from "./SidebarLeft";
 import Posts from './Posts';
-import { useNavigate } from 'react-router';
-import { useEffect } from 'react';
 
 export default function Home() {
 

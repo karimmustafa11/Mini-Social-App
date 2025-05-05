@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import postifyLogo from '../assets/Postify.png';
-import { UserContext } from '../Context/UserContext'; // ✅ استدعاء الـ context
+import postifyLogo from '../assets/Logo/Postify.png';
+import { UserContext } from '../Context/UserContext';
 
 export default function Header() {
     const navigate = useNavigate();
-    const { user, logout } = useContext(UserContext); // ✅ جلب البيانات والدوال من context
+    const { user, logout } = useContext(UserContext);
 
     const handleLogout = () => {
-        logout(); // ✅ مسح المستخدم من context و localStorage
-        navigate("/login"); // ✅ توجيه المستخدم لصفحة اللوجين
+        logout();
+        navigate("/login");
     };
 
     const NavigateSignUp = () => navigate("/signup");

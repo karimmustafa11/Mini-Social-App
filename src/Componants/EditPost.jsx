@@ -47,7 +47,6 @@ export default function EditPost() {
                         : null
                 );
 
-                // Fetch author info
                 const userRes = await axios.get(`http://localhost:5000/users/${post.userId}`);
                 setAuthorName(userRes.data.fullname || "Unknown");
                 setAuthorImage(userRes.data.image || "https://i.pravatar.cc/40?img=32");
@@ -94,7 +93,7 @@ export default function EditPost() {
             content,
             ...(imageBase64 && { image: imageBase64 }),
             userId: user.id,
-            createdAt, // preserve original creation date
+            createdAt, 
             updatedAt: new Date().toISOString(),
         };
 
